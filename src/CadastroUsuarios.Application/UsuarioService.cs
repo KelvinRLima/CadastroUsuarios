@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CadastroUsuarios.Application
 {
-    public class UsuarioService: IUsuarioService
+    public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
 
@@ -18,45 +18,111 @@ namespace CadastroUsuarios.Application
                 throw new ArgumentNullException(nameof(usuarioRepository));
         }
 
-        public async Task<IEnumerable<Usuario>> ListarUsuario()
+        public async Task<Result<IEnumerable<Usuario>>> ListarUsuario()
         {
-            return await _usuarioRepository.ListarUsuario();
+            var result = new Result<IEnumerable<Usuario>>();
+
+            try
+            {
+                result.Data = await _usuarioRepository.ListarUsuario();
+            }
+            catch (Exception ex)
+            {
+                result = new Result<IEnumerable<Usuario>>()
+                {
+                    IsException = true,
+                    Status = false,
+                    Message = "Falha ao consultar usuários: " + ex.Message
+                };
+            }
+            return result;
         }
 
-        public async Task<bool> AddUsuario(Usuario usuario)
+        public async Task<Result<bool>> AddUsuario(Usuario usuario)
         {
-            bool emailValido = ValidarEmail(usuario.Email);
+            var result = new Result<bool>();
 
-            bool dataNascValida = ValidarDataNascimento(usuario.DataNascimento);
+            try
+            {
+                bool emailValido = ValidarEmail(usuario.Email);
 
-            if (!emailValido)
-            {
-                throw new Exception("Email Inválido!");
+                bool dataNascValida = ValidarDataNascimento(usuario.DataNascimento);
+
+                if (!emailValido)
+                {
+                    throw new Exception("Email Inválido!");
+                }
+                else if (!dataNascValida)
+                {
+                    throw new Exception("Data de Nascimento deve ser maior que hoje!");
+                }
+                else
+                {
+                    await _usuarioRepository.AddUsuario(usuario);
+                }
+
+                result.Data = true;
+                result.Message = "Usuário adicionado com sucesso!";
             }
-            else if(!dataNascValida)
+            catch (Exception ex)
             {
-                throw new Exception("Data de Nascimento deve ser maior que hoje!");
-            }
-            else
-            {
-                await _usuarioRepository.AddUsuario(usuario);
+                result = new Result<bool>()
+                {
+                    IsException = true,
+                    Status = false,
+                    Message = ex.Message
+                };
             }
 
-            return true;
+            return result;
         }
 
-        public async Task<bool> UpdateUsuario(Usuario usuario)
+        public async Task<Result<bool>> UpdateUsuario(Usuario usuario)
         {
-            await _usuarioRepository.UpdateUsuario(usuario);
+            var result = new Result<bool>();
 
-            return true;
+            try
+            {
+                await _usuarioRepository.UpdateUsuario(usuario);
+
+                result.Data = true;
+                result.Message = "Usuário atualizado com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                result = new Result<bool>()
+                {
+                    IsException = true,
+                    Status = false,
+                    Message = ex.Message
+                };
+            }
+
+            return result;
         }
 
-        public async Task<bool> DeleteUsuario(int id)
+        public async Task<Result<bool>> DeleteUsuario(int id)
         {
-            await _usuarioRepository.DeleteUsuario(id);
+            var result = new Result<bool>();
 
-            return true;
+            try
+            {
+                await _usuarioRepository.DeleteUsuario(id);
+
+                result.Data = true;
+                result.Message = "Usuário excluído com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                result = new Result<bool>()
+                {
+                    IsException = true,
+                    Status = false,
+                    Message = ex.Message
+                };
+            }
+
+            return result;
         }
 
         private bool ValidarEmail(string email)

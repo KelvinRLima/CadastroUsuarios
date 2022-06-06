@@ -32,11 +32,21 @@ namespace CadastroUsuarios.WebApi.Controllers
         {
             try
             {
-                IEnumerable<Usuario> usuarios = await _usuarioService.ListarUsuario();
+                Result<IEnumerable<Usuario>> result = await _usuarioService.ListarUsuario();
 
-                IEnumerable<UsuarioGetAllResult> usuariosResult = _mapper.Map<IEnumerable<UsuarioGetAllResult>>(usuarios);
+                Result<IEnumerable<UsuarioGetAllResult>> resultApi =
+                    new Result<IEnumerable<UsuarioGetAllResult>>
+                    {
+                        Message = result.Message,
+                        Status = result.Status
+                    };
 
-                return Ok(usuariosResult);
+                if (result.Status)
+                {
+                    resultApi.Data = _mapper.Map<IEnumerable<UsuarioGetAllResult>>(result.Data);
+                }
+
+                return Ok(resultApi);
             }
             catch (Exception ex)
             {
@@ -51,7 +61,7 @@ namespace CadastroUsuarios.WebApi.Controllers
         {
             try
             {
-                bool result = await _usuarioService.AddUsuario(usuario);
+                Result<bool> result = await _usuarioService.AddUsuario(usuario);
 
                 return Ok(result);
             }
@@ -68,7 +78,7 @@ namespace CadastroUsuarios.WebApi.Controllers
         {
             try
             {
-                bool result = await _usuarioService.UpdateUsuario(usuario);
+                Result<bool> result = await _usuarioService.UpdateUsuario(usuario);
 
                 return Ok(result);
             }
@@ -85,7 +95,7 @@ namespace CadastroUsuarios.WebApi.Controllers
         {
             try
             {
-                bool result = await _usuarioService.DeleteUsuario(id);
+                Result<bool> result = await _usuarioService.DeleteUsuario(id);
 
                 return Ok(result);
             }

@@ -14,7 +14,7 @@ namespace CadastroUsuarios.Domain.Services
         /// <returns>
         /// Lista de usuarios.
         /// </returns>
-        Task<IEnumerable<Usuario>> ListarUsuario();
+        Task<Result<IEnumerable<Usuario>>> ListarUsuario();
 
         /// <summary>
         /// Insere um novo usuario.
@@ -22,7 +22,7 @@ namespace CadastroUsuarios.Domain.Services
         /// <returns>
         /// Sucesso da operacao.
         /// </returns>
-        Task<bool> AddUsuario(Usuario usuario);
+        Task<Result<bool>> AddUsuario(Usuario usuario);
 
         /// <summary>
         /// Atualiza dados do usuario.
@@ -30,7 +30,7 @@ namespace CadastroUsuarios.Domain.Services
         /// <returns>
         /// Sucesso da operacao.
         /// </returns>
-        Task<bool> UpdateUsuario(Usuario usuario);
+        Task<Result<bool>> UpdateUsuario(Usuario usuario);
 
         /// <summary>
         /// Remove usuario.
@@ -38,6 +38,6 @@ namespace CadastroUsuarios.Domain.Services
         /// <returns>
         /// Sucesso da operacao.
         /// </returns>
-        Task<bool> DeleteUsuario(int id);
+        Task<Result<bool>> DeleteUsuario(int id);
     }
 }

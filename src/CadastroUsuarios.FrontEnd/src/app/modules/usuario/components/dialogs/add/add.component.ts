@@ -13,7 +13,6 @@ import { UsuarioService } from "../../../usuario.service";
   templateUrl: "./add.component.html",
   styleUrls: ["./add.component.css"],
 })
-
 export class AddComponent implements OnInit {
   titulo: string;
   usuario: Usuario = {
@@ -27,15 +26,15 @@ export class AddComponent implements OnInit {
   };
 
   escolaridade: Esc[] = [
-    {value: 'infantil', viewValue: 'Infantil'},
-    {value: 'fundamental', viewValue: 'Fundamental'},
-    {value: 'medio', viewValue: 'Médio'},
-    {value: 'superior', viewValue: 'Superior'}
+    { value: "infantil", viewValue: "Infantil" },
+    { value: "fundamental", viewValue: "Fundamental" },
+    { value: "medio", viewValue: "Médio" },
+    { value: "superior", viewValue: "Superior" },
   ];
 
-  selectedEsc = '';
+  selectedEsc = "";
 
-  date = new FormControl({value: new Date()});
+  date = new FormControl({ value: new Date() });
 
   constructor(
     public dialogRef: MatDialogRef<AddComponent>,
@@ -47,14 +46,13 @@ export class AddComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data) {
-      this.titulo = 'Editar Usuário';
+      this.titulo = "Editar Usuário";
       this.usuario = this.data;
-      this.date = new FormControl({value: this.usuario.dataNascimento});
+      this.date = new FormControl({ value: this.usuario.dataNascimento });
       this.selectedEsc = Escolaridade[this.usuario.escolaridade]; //this.escolaridade[0].value;
       console.log("Dialog Update", this.data);
-    }
-    else {
-      this.titulo = 'Adicionar Usuário';
+    } else {
+      this.titulo = "Adicionar Usuário";
     }
   }
 
@@ -63,38 +61,48 @@ export class AddComponent implements OnInit {
   }
 
   salvar(): void {
+    this.usuario.escolaridade = Escolaridade[this.selectedEsc];
+    this.usuario.dataNascimento = this.date.value;
     if (this.usuario.id == 0) {
-      this.usuario.escolaridade = Escolaridade[this.selectedEsc];
-      this.usuario.dataNascimento = this.date.value;
       console.log("Add!");
       this.serv.adicionar(this.usuario).subscribe(
         (result) => {
-          if (result){
+          if (result.status) {
             this.dialogRef.close();
-            this._snackBar.open("Usuário adicionado com sucesso!");
-          }
-          else {
-            this._snackBar.open("Falha ao adicionar usuário");
+            this._snackBar.open(result.message, "", {
+              duration: 3000,
+            });
+          } else {
+            this._snackBar.open(result.message, "", {
+              duration: 3000,
+            });
           }
         },
         (err: HttpErrorResponse) => {
-          this._snackBar.open("Erro: " + err.message);
+          this._snackBar.open("Erro: " + err.message, "", {
+            duration: 3000,
+          });
         }
       );
     } else {
       console.log("Update!");
       this.serv.atualizar(this.usuario).subscribe(
         (result) => {
-          if (result){
+          if (result.status) {
             this.dialogRef.close();
-            this._snackBar.open("Usuário atualizado com sucesso!");
-          }
-          else {
-            this._snackBar.open("Falha ao atualizar usuário");
+            this._snackBar.open(result.message, "", {
+              duration: 3000,
+            });
+          } else {
+            this._snackBar.open(result.message, "", {
+              duration: 3000,
+            });
           }
         },
         (err: HttpErrorResponse) => {
-          this._snackBar.open("Erro: " + err.message);
+          this._snackBar.open("Erro: " + err.message, "", {
+            duration: 3000,
+          });
         }
       );
     }

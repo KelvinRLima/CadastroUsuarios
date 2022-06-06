@@ -19,7 +19,8 @@ export class UsuarioComponent implements OnInit {
   usuarios: Usuario[]
   displayedColumns = ['id', 'nome', 'sobrenome', 'email', 'dataNascimento', 'escolaridade', 'acoes']
   
-  constructor(private serv: UsuarioService, private router: Router, public dialog: MatDialog) {}
+  constructor(private serv: UsuarioService, private router: Router, public dialog: MatDialog,
+    private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -27,10 +28,19 @@ export class UsuarioComponent implements OnInit {
 
   loadData(){
     this.serv.listar().subscribe(result => {
-      this.usuarios = result;
-      this.usuarios.forEach(x => x.escolaridadeString = Escolaridade[x.escolaridade]);
+      if (result.status){
+        this.usuarios = result.data;
+        this.usuarios.forEach(x => x.escolaridadeString = Escolaridade[x.escolaridade]);
+      }
+      else {
+        this._snackBar.open(result.message, '', {
+          duration: 3000
+        });
+      }
     }, (err: HttpErrorResponse) => {
-
+      this._snackBar.open('Erro: ' + err.message, '', {
+        duration: 3000
+      });
     });
   }
 

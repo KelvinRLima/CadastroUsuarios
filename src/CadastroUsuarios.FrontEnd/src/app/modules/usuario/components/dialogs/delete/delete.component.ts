@@ -23,17 +23,23 @@ export class DeleteComponent implements OnInit {
   confirmDelete(): void {
     this.serv.deletar(this.data.id).subscribe(
       (result) => {
-        if (result){
+        if (result.status){
           this.dialogRef.close();
-          this._snackBar.open("Usuário excluído com sucesso!");
+          this._snackBar.open(result.message, '', {
+            duration: 3000
+          });
         }
         else {
           this.dialogRef.close();
-          this._snackBar.open("Falha ao excluir usuário");
+          this._snackBar.open(result.message, '', {
+            duration: 3000
+          });
         }
       },
       (err: HttpErrorResponse) => {
-        this._snackBar.open("Erro: " + err.message);
+        this._snackBar.open('Erro: ' + err.message, '', {
+          duration: 3000
+        });
       }
     );
   }
