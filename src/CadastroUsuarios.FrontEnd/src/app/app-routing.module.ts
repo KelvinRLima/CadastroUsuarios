@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: "usuario",
-    component: UsuarioComponent
+    loadChildren: './modules/usuario/usuario.module#UsuarioModule'
   }
 ];
 

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AddComponent } from '../dialogs/add/add.component';
 import { DeleteComponent } from '../dialogs/delete/delete.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HeaderService } from 'src/app/core/template/header/header.service';
 
 @Component({
   selector: 'app-usuario',
@@ -20,7 +21,13 @@ export class UsuarioComponent implements OnInit {
   displayedColumns = ['id', 'nome', 'sobrenome', 'email', 'dataNascimento', 'escolaridade', 'acoes']
   
   constructor(private serv: UsuarioService, private router: Router, public dialog: MatDialog,
-    private _snackBar: MatSnackBar) {}
+    private _snackBar: MatSnackBar, private headerService: HeaderService) {
+      headerService.headerData = {
+        title: 'Usuários',
+        icon: 'groups',
+        routeUrl: ''
+      }
+    }
 
   ngOnInit(): void {
     this.loadData();

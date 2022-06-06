@@ -1,0 +1,17 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { UsuarioRoutingModule } from './usuario-routing.module';
+import { UsuarioComponent } from './components/usuario/usuario.component';
+import { MaterialModule } from 'src/app/shared/material.module';
+
+
+@NgModule({
+  declarations: [UsuarioComponent],
+  imports: [
+    CommonModule,
+    UsuarioRoutingModule,
+    MaterialModule
+  ]
+})
+export class UsuarioModule { }
