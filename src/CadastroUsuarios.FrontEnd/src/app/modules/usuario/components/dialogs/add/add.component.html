@@ -1,0 +1,38 @@
+<div mat-dialog-content>
+    <h1 mat-dialog-title>{{titulo}}</h1>
+    <form #formControl='ngForm'>
+      <mat-form-field>
+        <mat-label>Nome</mat-label>
+        <input matInput [(ngModel)]="usuario.nome" name="nome" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Sobrenome</mat-label>
+        <input matInput [(ngModel)]="usuario.sobrenome" name="sobrenome" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>E-mail</mat-label>
+        <input matInput [(ngModel)]="usuario.email" name="email" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data de Nascimento</mat-label>
+        <input matInput [matDatepicker]="picker1" [formControl]="date">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Escolaridade</mat-label>
+        <select matNativeControl (change)="selectEscolaridade($event)">
+          <option value=""></option>
+          <option *ngFor="let option of escolaridade" [value]="option.value"
+                  [selected]="selectedEsc === option.value">{{ option.viewValue }}</option>
+        </select>
+      </mat-form-field>
+      
+    </form>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button (click)="close()" class="btnCancelar">Cancelar</button>
+    <button mat-raised-button [disabled]="!formControl.valid" (click)="salvar()" class="btnSalvar" color="primary">Salvar</button>
+  </div>
